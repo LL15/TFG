@@ -8,12 +8,16 @@ public class LecturaDatos implements LecturaDatosConstants {
   //Fichero del que se extraen los datos
   public final static String path = "C:\u005c\u005cbisdev_jira_com.html";
 
+  public final static String path1 = "C:\u005c\u005cprobatina.txt";
+
   public static void main(String args []) throws ParseException
   {
     System.out.println("Acaba de empezar el main");
     //Se abre el fichero
     try {
       BufferedReader buf = new BufferedReader(new FileReader (path));
+
+      BufferedWriter esc = new BufferedWriter(new FileWriter (path1));
 
       //Se crea el parser
       LecturaDatos parser = new LecturaDatos(buf);
@@ -24,6 +28,15 @@ public class LecturaDatos implements LecturaDatosConstants {
           int incidencias = parser.leer_body();
           //Obtencion de las cabeceras de la tabla
           String [] cab = parser.leerCabecera();
+          String escr = "";
+          int i=0;
+          while(i<cab.length){
+            escr= escr + cab[i];
+            escr= escr + ", ";
+            i++;
+          }
+          esc.write(escr);
+          esc.flush();
           //Se empiezan a leer los atributos de las incidencias
           parser.leerContenido();
 
@@ -196,8 +209,8 @@ public class LecturaDatos implements LecturaDatosConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public void leerContenido() throws ParseException {
-                       String n="", n1, cadena=""; int num;
+  static final public String leerContenido() throws ParseException {
+                         String n="", n1, cadena=""; int num;
    System.out.println("Se ha entrado en leerContenido");
     jj_consume_token(TR_BODY);
     saltar();
@@ -699,7 +712,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= n; cadena+=", ";System.out.println("Aqui me quedo");
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1230,7 +1243,9 @@ public class LecturaDatos implements LecturaDatosConstants {
            cadena+= n; cadena+="; ";
    System.out.println(cadena);
     jj_consume_token(TR_FIN);
+   {if (true) return cadena;}
     jj_consume_token(BODY_FIN);
+    throw new Error("Missing return statement in function");
   }
 
   static final public String cadena() throws ParseException {

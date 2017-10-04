@@ -2022,7 +2022,7 @@ static private int jjMoveStringLiteralDfa81_0(long old0, long active0)
    return jjStartNfa_0(80, active0);
 }
 static final long[] jjbitVec0 = {
-   0x0L, 0x0L, 0x8488140a00000000L, 0xe1e67870e1e778fL
+   0x0L, 0x0L, 0x8488144a00000000L, 0xe1e67870e1e778fL
 };
 static final long[] jjbitVec1 = {
    0x0L, 0x2100000000080000L, 0x40000L, 0x0L

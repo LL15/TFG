@@ -8,11 +8,15 @@ import java.util.*;
 public class LecturaDatos{
   //Fichero del que se extraen los datos
   public final static String path = "C:\\bisdev_jira_com.html";
+
+  public final static String path1 = "C:\\probatina.txt";
     public static void main(String args []) throws ParseException  {
     System.out.println("Acaba de empezar el main");
     //Se abre el fichero
     try {
       BufferedReader buf = new BufferedReader(new FileReader (path));
+
+      BufferedWriter esc = new BufferedWriter(new FileWriter (path1));
       
       //Se crea el parser
       LecturaDatos parser = new LecturaDatos(buf);
@@ -23,6 +27,15 @@ public class LecturaDatos{
 	  int incidencias = parser.leer_body();
 	  //Obtencion de las cabeceras de la tabla
 	  String [] cab = parser.leerCabecera();
+	  String escr = "";
+	  int i=0;
+	  while(i<cab.length){
+	    escr= escr + cab[i];
+	    escr= escr + ", ";
+	    i++;
+	  }
+	  esc.write(escr);
+	  esc.flush();
 	  //Se empiezan a leer los atributos de las incidencias
 	  parser.leerContenido();
 
@@ -48,7 +61,7 @@ public class LecturaDatos{
 				   "!","¿","?","=","+","*","/","‡","†", "Ž", "’", "œ","ç","Ç",
 				   "ƒ","„","Ÿ","(", ")", "\\", "@", "%", "#", "&","[", "]","|",
 				   "{", "}","$","€", "¿", "?", "º", "ª","·","¬","\"","0"-"9",
-				   "\u00a3","\u00c3","\u00b3","•"])+ >}TOKEN : /* Para las tablas */{
+				   "\u00a3","\u00c3","\u00b3","\u00a6","•"])+ >}TOKEN : /* Para las tablas */{
   < TABLA_INICIO : "<table " >
 | < TABLA_FIN : "</table>" >
 | < THEAD : "<thead>" >
@@ -139,7 +152,7 @@ String[] leerCabecera(): {
   
 }
 
-void leerContenido(): {String n="", n1, cadena=""; int num;}
+String leerContenido(): {String n="", n1, cadena=""; int num;}
 {
   {System.out.println("Se ha entrado en leerContenido");}
   <TR_BODY>saltar()
@@ -224,7 +237,7 @@ void leerContenido(): {String n="", n1, cadena=""; int num;}
   <TD_FIN>
   {cadena+= n; cadena+=", ";}
   <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
-  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_FIN>{cadena+= n; cadena+=", ";System.out.println("Aqui me quedo");}
   //Descripcion
   <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
   {cadena+= n; cadena+=", ";}
@@ -293,7 +306,8 @@ void leerContenido(): {String n="", n1, cadena=""; int num;}
   <TD_FIN>{cadena+= n; cadena+="; ";}
   {System.out.println(cadena);}
   <TR_FIN>
-  
+
+  {return cadena;}
   <BODY_FIN>
 }
 
