@@ -1,0 +1,314 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = true;}PARSER_BEGIN(LecturaDatos)package lecturaDatos;
+
+import java.io.*;
+import java.util.*;
+
+public class LecturaDatos{
+  //Fichero del que se extraen los datos
+  public final static String path = "C:\\bisdev_jira_com.html";
+    public static void main(String args []) throws ParseException  {
+    System.out.println("Acaba de empezar el main");
+    //Se abre el fichero
+    try {
+      BufferedReader buf = new BufferedReader(new FileReader (path));
+      
+      //Se crea el parser
+      LecturaDatos parser = new LecturaDatos(buf);
+      
+	  //Se empieza a leer el fichero
+	  parser.leer_head();
+	  //Obtencion del número de incidencias que hay
+	  int incidencias = parser.leer_body();
+	  //Obtencion de las cabeceras de la tabla
+	  String [] cab = parser.leerCabecera();
+	  //Se empiezan a leer los atributos de las incidencias
+	  parser.leerContenido();
+
+	  
+	  //Se cierra el fichero
+	  System.out.println("Se cierra el fichero");
+	  buf.close();
+    }
+    catch(Exception e) {
+		System.out.println("Exception " + e.getMessage());  	}  }
+}PARSER_END(LecturaDatos)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* Generales */{  < HTML : "<html xmlns=\"http://www.w3.org/TR/REC-html40\">" >
+| < HTML_FIN : "</html>" >
+| < HEAD : "<head>" >
+| < HEAD_FIN : "</head>" >
+| < BODY : "<body>" >
+| < BODY_FIN : "</body>" >
+| < NUMEROS : (["0"-"9"])+ >
+| < ETIQUETA : "<" >
+| < ETIQUETA_FIN : ">" >
+| < CARACTERES : (["a"-"z","A"-"Z","á","é","í","ó","ú","Á","É","Í","Ó","Ú","â",
+				   "ê","î","ô","û","à","è","í","ò","ù","Â","Ê","Î","Ô","Û","À",
+				   "È","Ì","Ò","Ù","ñ", "Ñ",".",",",":",";","-","_","\"","'","¡",
+				   "!","¿","?","=","+","*","/","‡","†", "Ž", "’", "œ","ç","Ç",
+				   "ƒ","„","Ÿ","(", ")", "\\", "@", "%", "#", "&","[", "]","|",
+				   "{", "}","$","€", "¿", "?", "º", "ª","·","¬","\"","0"-"9",
+				   "\u00a3","\u00c3","\u00b3","•"])+ >}TOKEN : /* Para las tablas */{
+  < TABLA_INICIO : "<table " >
+| < TABLA_FIN : "</table>" >
+| < THEAD : "<thead>" >
+| < THEAD_FIN : "</thead>" >
+| < TBODY : "<tbody>">
+| < TBODY_FIN : "</tbody>" >
+| < TR : "<tr>">
+| < TR_BG : "<tr bgcolor=\"#003466\" height=\"30\">" >
+| < TR_ID : "<tr id=\"">
+| < TR_CLASS : "<tr class=\"rowHeader\">">
+| < TR_BODY : "<tr id=\"issuerow">
+| < TR_FIN : "</tr>">
+| < TH_CLASS : "<th class=\"colHeaderLink headerrow-">
+| < TH_FIN : "</th>">
+| < TD_COL : "<td colspan=\"58\">">
+| < TD_CLASS : "<td class=\"">
+| < TD_BG : "<td bgcolor=\"#dddddd\" colspan=\"58\">">
+| < TD_FIN : "</td>">
+}
+
+TOKEN : /* Para el contenido */
+{
+  < TITLE : "<title>">
+| < TITLE_FIN : "</title>">
+| < STYLE : "<style " >
+| < STYLE_FIN : "</style>" >
+| < META : "<META HTTP-EQUIV=\"Content-Type\" Content=\"application/vnd.ms-excel; charset=UTF-8\">" >
+| < A_HREF : "<a href=\"" >
+| < A_CLASS : "<a class=\"" >
+| < A_FIN : "</a>" >
+| < DIV : "<div " >
+| < DIV_FIN : "</div>" >
+| < IMG : "<img src=\"" >
+| < SPAN : "<span" >
+| < SPAN_FIN : "</span>" >
+| < STRONG : "<strong>" >
+| < STRONG_FIN : "</strong>" >
+| < FONT : "<font>" >
+| < FONT_FIN : "</font>" >
+| < P : "<p>" >
+| < P_FIN : "</p>" >
+
+}
+void saltar(): {}
+{
+  { System.out.println("He entrado en saltar");}
+   (<CARACTERES> | <ETIQUETA> | <ETIQUETA_FIN> | <NUMEROS> | <IMG>
+   | <A_HREF> | <STRONG> | <STRONG_FIN>| <TD_FIN>)+
+}
+
+void leer_head() : {}
+{
+  {System.out.println("Principio de leer_head");}
+  <HTML><HEAD><TITLE><CARACTERES><TITLE_FIN><STYLE>
+  <CARACTERES><ETIQUETA_FIN>saltar()<STYLE_FIN><META>
+  saltar()<STYLE_FIN>saltar()<HEAD_FIN>
+  {System.out.println("Fin de leer_head");}
+}
+
+int leer_body() : {int n;}
+{
+  {System.out.println("Principio de leer_body"); }
+  <BODY><TABLA_INICIO><CARACTERES><ETIQUETA_FIN>
+  <TR_BG><TD_COL><IMG>saltar()<TR_FIN>
+  <TR><TD_COL><A_HREF><CARACTERES><ETIQUETA_FIN><CARACTERES><A_FIN><TD_FIN>
+  <TR_FIN>
+  <TR><TD_COL><CARACTERES><STRONG>n=numero()<STRONG_FIN>saltar()
+  <TR_FIN><TABLA_FIN>
+  {System.out.println("El numero de incidencias es:");System.out.println(n);
+  return n;}  
+}
+
+String[] leerCabecera(): { 
+  String [] cabecera= new String [58];
+  int i=0;
+  String nombre="", n1;
+  }
+{
+  //Se empieza a leer la cabecera de la tabla
+  {System.out.println("Empieza la cabecera de la tabla"); }
+  <TABLA_INICIO>saltar()<THEAD><TR_CLASS>
+  ( <TH_CLASS><CARACTERES><CARACTERES><ETIQUETA_FIN>
+  nombre = cadena() (n1=cadena() {nombre +=" " + n1;})*
+  {cabecera[i]=nombre; i++;}
+  <TH_FIN>)+ <TR_FIN><THEAD_FIN><TBODY>
+  {System.out.println("Se ha terminado de leer la cabecera");
+  return cabecera;}
+  
+}
+
+void leerContenido(): {String n="", n1, cadena=""; int num;}
+{
+  {System.out.println("Se ha entrado en leerContenido");}
+  <TR_BODY>saltar()
+  //Proyecto
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*<TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  //Issue key
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN><A_CLASS>(<CARACTERES>)+
+  <ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <A_FIN><TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  //Summary
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN><P>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <P_FIN><TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  //Issue type
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  //Status
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN><SPAN>(<CARACTERES>)+<ETIQUETA_FIN>
+  n=cadena()(n1=cadena() {n +=" " + n1;})*<SPAN_FIN><TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>num=numero()<TD_FIN>
+  {cadena+= num; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>num=numero()<TD_FIN>
+  {cadena+= num; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  {cadena+= n; cadena+=", ";}<TD_FIN>
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>num=numero()<TD_FIN>
+  {cadena+= num; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>num=numero()<TD_FIN>
+  {cadena+= num; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>num=numero()<TD_FIN>
+  {cadena+= num; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>
+  {cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  //Descripcion
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  {cadena+= n; cadena+=", ";}
+  <TD_FIN>
+  //Seguridad
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>num=numero()<TD_FIN>
+  {cadena+= num; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>num=numero()<TD_FIN>
+  {cadena+= num; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>num=numero()<TD_FIN>
+  {cadena+= num; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN><DIV><CARACTERES><ETIQUETA_FIN>
+  <DIV> {System.out.println("Se va a hacer un saltar()");}saltar()<A_CLASS>
+  saltar()<A_FIN><DIV_FIN><DIV_FIN><TD_FIN>{cadena+= "null, ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+=", ";}
+  <TD_CLASS><CARACTERES><ETIQUETA_FIN>n=cadena()(n1=cadena() {n +=" " + n1;})*
+  <TD_FIN>{cadena+= n; cadena+="; ";}
+  {System.out.println(cadena);}
+  <TR_FIN>
+  
+  <BODY_FIN>
+}
+
+
+String cadena() :
+{ Token s ; }
+{
+  s= < CARACTERES >
+  { return s.image; }
+}
+
+
+int numero() :
+{ Token s ; }
+{
+  s= < NUMEROS >
+  { return Integer.parseInt(s.image); }
+}
