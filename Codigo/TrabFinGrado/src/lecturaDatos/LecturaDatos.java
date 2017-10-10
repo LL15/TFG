@@ -16,7 +16,6 @@ public class LecturaDatos implements LecturaDatosConstants {
     //Se abre el fichero
     try {
       BufferedReader buf = new BufferedReader(new FileReader (path));
-
       BufferedWriter esc = new BufferedWriter(new FileWriter (path1));
 
       //Se crea el parser
@@ -36,10 +35,17 @@ public class LecturaDatos implements LecturaDatosConstants {
             i++;
           }
           esc.write(escr);
+          esc.newLine();
           esc.flush();
+          i=0;
           //Se empiezan a leer los atributos de las incidencias
-          parser.leerContenido();
-
+          while(i<incidencias) {
+            System.out.println("Lectura numero "+i);
+            esc.write(parser.leerContenido());//Lee la primera incidencia
+            esc.newLine();
+            i++;
+          }
+          esc.flush();
 
           //Se cierra el fichero
           System.out.println("Se cierra el fichero");
@@ -210,7 +216,7 @@ public class LecturaDatos implements LecturaDatosConstants {
   }
 
   static final public String leerContenido() throws ParseException {
-                         String n="", n1, cadena=""; int num;
+                         String n="", n1, n2, cadena=""; int num;
    System.out.println("Se ha entrado en leerContenido");
     jj_consume_token(TR_BODY);
     saltar();
@@ -363,6 +369,14 @@ public class LecturaDatos implements LecturaDatosConstants {
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case EM:
+      jj_consume_token(EM);
+      break;
+    default:
+      jj_la1[12] = jj_gen;
+      ;
+    }
     n = cadena();
     label_12:
     while (true) {
@@ -371,17 +385,33 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[12] = jj_gen;
+        jj_la1[13] = jj_gen;
         break label_12;
       }
       n1 = cadena();
-                                                              n +=" " + n1;
+                n +=" " + n1;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case EM_FIN:
+      jj_consume_token(EM_FIN);
+      break;
+    default:
+      jj_la1[14] = jj_gen;
+      ;
     }
     jj_consume_token(TD_FIN);
    cadena+= n; cadena+=", ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case EM:
+      jj_consume_token(EM);
+      break;
+    default:
+      jj_la1[15] = jj_gen;
+      ;
+    }
     n = cadena();
     label_13:
     while (true) {
@@ -390,11 +420,19 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[13] = jj_gen;
+        jj_la1[16] = jj_gen;
         break label_13;
       }
       n1 = cadena();
-                                                              n +=" " + n1;
+   n +=" " + n1;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case EM_FIN:
+      jj_consume_token(EM_FIN);
+      break;
+    default:
+      jj_la1[17] = jj_gen;
+      ;
     }
     jj_consume_token(TD_FIN);
    cadena+= n; cadena+=", ";
@@ -409,7 +447,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[14] = jj_gen;
+        jj_la1[18] = jj_gen;
         break label_14;
       }
       n1 = cadena();
@@ -428,7 +466,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[15] = jj_gen;
+        jj_la1[19] = jj_gen;
         break label_15;
       }
       n1 = cadena();
@@ -447,7 +485,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[16] = jj_gen;
+        jj_la1[20] = jj_gen;
         break label_16;
       }
       n1 = cadena();
@@ -466,7 +504,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[17] = jj_gen;
+        jj_la1[21] = jj_gen;
         break label_17;
       }
       n1 = cadena();
@@ -485,7 +523,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[18] = jj_gen;
+        jj_la1[22] = jj_gen;
         break label_18;
       }
       n1 = cadena();
@@ -504,7 +542,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[19] = jj_gen;
+        jj_la1[23] = jj_gen;
         break label_19;
       }
       n1 = cadena();
@@ -523,7 +561,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[20] = jj_gen;
+        jj_la1[24] = jj_gen;
         break label_20;
       }
       n1 = cadena();
@@ -542,7 +580,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[21] = jj_gen;
+        jj_la1[25] = jj_gen;
         break label_21;
       }
       n1 = cadena();
@@ -561,7 +599,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[22] = jj_gen;
+        jj_la1[26] = jj_gen;
         break label_22;
       }
       n1 = cadena();
@@ -580,7 +618,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[23] = jj_gen;
+        jj_la1[27] = jj_gen;
         break label_23;
       }
       n1 = cadena();
@@ -603,6 +641,16 @@ public class LecturaDatos implements LecturaDatosConstants {
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case A_HREF:
+      jj_consume_token(A_HREF);
+      jj_consume_token(CARACTERES);
+      jj_consume_token(ETIQUETA_FIN);
+      break;
+    default:
+      jj_la1[28] = jj_gen;
+      ;
+    }
     n = cadena();
     label_24:
     while (true) {
@@ -611,92 +659,94 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[24] = jj_gen;
+        jj_la1[29] = jj_gen;
         break label_24;
       }
       n1 = cadena();
-                                                              n +=" " + n1;
+                          n +=" " + n1;
     }
    cadena+= n; cadena+=", ";
-    jj_consume_token(TD_FIN);
-    jj_consume_token(TD_CLASS);
-    jj_consume_token(CARACTERES);
-    jj_consume_token(ETIQUETA_FIN);
-    num = numero();
-    jj_consume_token(TD_FIN);
-   cadena+= num; cadena+=", ";
-    jj_consume_token(TD_CLASS);
-    jj_consume_token(CARACTERES);
-    jj_consume_token(ETIQUETA_FIN);
-    num = numero();
-    jj_consume_token(TD_FIN);
-   cadena+= num; cadena+=", ";
-    jj_consume_token(TD_CLASS);
-    jj_consume_token(CARACTERES);
-    jj_consume_token(ETIQUETA_FIN);
-    num = numero();
-    jj_consume_token(TD_FIN);
-   cadena+= num; cadena+=", ";
-    jj_consume_token(TD_CLASS);
-    jj_consume_token(CARACTERES);
-    jj_consume_token(ETIQUETA_FIN);
-    n = cadena();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case A_FIN:
+      jj_consume_token(A_FIN);
+      break;
+    default:
+      jj_la1[30] = jj_gen;
+      ;
+    }
     label_25:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case CARACTERES:
+      case A_HREF:
         ;
         break;
       default:
-        jj_la1[25] = jj_gen;
+        jj_la1[31] = jj_gen;
         break label_25;
       }
-      n1 = cadena();
-                                                              n +=" " + n1;
-    }
-    jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
-    jj_consume_token(TD_CLASS);
-    jj_consume_token(CARACTERES);
-    jj_consume_token(ETIQUETA_FIN);
-    n = cadena();
-    label_26:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case CARACTERES:
-        ;
-        break;
-      default:
-        jj_la1[26] = jj_gen;
-        break label_26;
+      jj_consume_token(A_HREF);
+      jj_consume_token(CARACTERES);
+      jj_consume_token(ETIQUETA_FIN);
+      n = cadena();
+      label_26:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case CARACTERES:
+          ;
+          break;
+        default:
+          jj_la1[32] = jj_gen;
+          break label_26;
+        }
+        n1 = cadena();
+                          n +=" " + n1;
       }
-      n1 = cadena();
-                                                              n +=" " + n1;
+   cadena+= n; cadena+=", ";
+      jj_consume_token(A_FIN);
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
-    n = cadena();
-    label_27:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case CARACTERES:
-        ;
-        break;
-      default:
-        jj_la1[27] = jj_gen;
-        break label_27;
+    num = numero();
+    jj_consume_token(TD_FIN);
+   cadena+= num; cadena+=", ";
+    jj_consume_token(TD_CLASS);
+    jj_consume_token(CARACTERES);
+    jj_consume_token(ETIQUETA_FIN);
+    num = numero();
+    jj_consume_token(TD_FIN);
+   cadena+= num; cadena+=", ";
+    jj_consume_token(TD_CLASS);
+    jj_consume_token(CARACTERES);
+    jj_consume_token(ETIQUETA_FIN);
+    num = numero();
+    jj_consume_token(TD_FIN);
+   cadena+= num; cadena+=", ";
+    jj_consume_token(TD_CLASS);
+    jj_consume_token(CARACTERES);
+    jj_consume_token(ETIQUETA_FIN);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case SPAN:
+      jj_consume_token(SPAN);
+      label_27:
+      while (true) {
+        jj_consume_token(CARACTERES);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case CARACTERES:
+          ;
+          break;
+        default:
+          jj_la1[33] = jj_gen;
+          break label_27;
+        }
       }
-      n1 = cadena();
-                                                              n +=" " + n1;
+      jj_consume_token(ETIQUETA_FIN);
+      break;
+    default:
+      jj_la1[34] = jj_gen;
+      ;
     }
-    jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
-    jj_consume_token(TD_CLASS);
-    jj_consume_token(CARACTERES);
-    jj_consume_token(ETIQUETA_FIN);
     n = cadena();
     label_28:
     while (true) {
@@ -705,14 +755,22 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[28] = jj_gen;
+        jj_la1[35] = jj_gen;
         break label_28;
       }
       n1 = cadena();
-                                                              n +=" " + n1;
+                          n +=" " + n1;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case SPAN_FIN:
+      jj_consume_token(SPAN_FIN);
+      break;
+    default:
+      jj_la1[36] = jj_gen;
+      ;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";System.out.println("Aqui me quedo");
+   cadena+= n; cadena+=", ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -724,14 +782,14 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[29] = jj_gen;
+        jj_la1[37] = jj_gen;
         break label_29;
       }
       n1 = cadena();
                                                               n +=" " + n1;
     }
-   cadena+= n; cadena+=", ";
     jj_consume_token(TD_FIN);
+   cadena+= n; cadena+=", ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -743,14 +801,14 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[30] = jj_gen;
+        jj_la1[38] = jj_gen;
         break label_30;
       }
       n1 = cadena();
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+   cadena+= n; cadena+=", ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -762,7 +820,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[31] = jj_gen;
+        jj_la1[39] = jj_gen;
         break label_31;
       }
       n1 = cadena();
@@ -781,32 +839,14 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[32] = jj_gen;
+        jj_la1[40] = jj_gen;
         break label_32;
       }
       n1 = cadena();
                                                               n +=" " + n1;
     }
+   cadena+= n; cadena+=", ";
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
-    jj_consume_token(TD_CLASS);
-    jj_consume_token(CARACTERES);
-    jj_consume_token(ETIQUETA_FIN);
-    num = numero();
-    jj_consume_token(TD_FIN);
-   cadena+= num; cadena+=", ";
-    jj_consume_token(TD_CLASS);
-    jj_consume_token(CARACTERES);
-    jj_consume_token(ETIQUETA_FIN);
-    num = numero();
-    jj_consume_token(TD_FIN);
-   cadena+= num; cadena+=", ";
-    jj_consume_token(TD_CLASS);
-    jj_consume_token(CARACTERES);
-    jj_consume_token(ETIQUETA_FIN);
-    num = numero();
-    jj_consume_token(TD_FIN);
-   cadena+= num; cadena+=", ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -818,7 +858,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[33] = jj_gen;
+        jj_la1[41] = jj_gen;
         break label_33;
       }
       n1 = cadena();
@@ -837,7 +877,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[34] = jj_gen;
+        jj_la1[42] = jj_gen;
         break label_34;
       }
       n1 = cadena();
@@ -856,7 +896,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[35] = jj_gen;
+        jj_la1[43] = jj_gen;
         break label_35;
       }
       n1 = cadena();
@@ -864,6 +904,24 @@ public class LecturaDatos implements LecturaDatosConstants {
     }
     jj_consume_token(TD_FIN);
            cadena+= n; cadena+=", ";
+    jj_consume_token(TD_CLASS);
+    jj_consume_token(CARACTERES);
+    jj_consume_token(ETIQUETA_FIN);
+    num = numero();
+    jj_consume_token(TD_FIN);
+   cadena+= num; cadena+=", ";
+    jj_consume_token(TD_CLASS);
+    jj_consume_token(CARACTERES);
+    jj_consume_token(ETIQUETA_FIN);
+    num = numero();
+    jj_consume_token(TD_FIN);
+   cadena+= num; cadena+=", ";
+    jj_consume_token(TD_CLASS);
+    jj_consume_token(CARACTERES);
+    jj_consume_token(ETIQUETA_FIN);
+    num = numero();
+    jj_consume_token(TD_FIN);
+   cadena+= num; cadena+=", ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -875,7 +933,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[36] = jj_gen;
+        jj_la1[44] = jj_gen;
         break label_36;
       }
       n1 = cadena();
@@ -883,6 +941,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     }
     jj_consume_token(TD_FIN);
            cadena+= n; cadena+=", ";
+  System.out.println("Empieza la lectura de los custom fields");
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -894,7 +953,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[37] = jj_gen;
+        jj_la1[45] = jj_gen;
         break label_37;
       }
       n1 = cadena();
@@ -913,7 +972,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[38] = jj_gen;
+        jj_la1[46] = jj_gen;
         break label_38;
       }
       n1 = cadena();
@@ -932,7 +991,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[39] = jj_gen;
+        jj_la1[47] = jj_gen;
         break label_39;
       }
       n1 = cadena();
@@ -951,7 +1010,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[40] = jj_gen;
+        jj_la1[48] = jj_gen;
         break label_40;
       }
       n1 = cadena();
@@ -970,7 +1029,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[41] = jj_gen;
+        jj_la1[49] = jj_gen;
         break label_41;
       }
       n1 = cadena();
@@ -989,7 +1048,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[42] = jj_gen;
+        jj_la1[50] = jj_gen;
         break label_42;
       }
       n1 = cadena();
@@ -1008,7 +1067,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[43] = jj_gen;
+        jj_la1[51] = jj_gen;
         break label_43;
       }
       n1 = cadena();
@@ -1027,7 +1086,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[44] = jj_gen;
+        jj_la1[52] = jj_gen;
         break label_44;
       }
       n1 = cadena();
@@ -1046,7 +1105,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[45] = jj_gen;
+        jj_la1[53] = jj_gen;
         break label_45;
       }
       n1 = cadena();
@@ -1065,7 +1124,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[46] = jj_gen;
+        jj_la1[54] = jj_gen;
         break label_46;
       }
       n1 = cadena();
@@ -1084,7 +1143,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[47] = jj_gen;
+        jj_la1[55] = jj_gen;
         break label_47;
       }
       n1 = cadena();
@@ -1092,6 +1151,12 @@ public class LecturaDatos implements LecturaDatosConstants {
     }
     jj_consume_token(TD_FIN);
            cadena+= n; cadena+=", ";
+    jj_consume_token(TD_CLASS);
+    jj_consume_token(CARACTERES);
+    jj_consume_token(ETIQUETA_FIN);
+    num = numero();
+                                                    cadena+= num; cadena+=", ";
+    jj_consume_token(TD_FIN);
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1103,30 +1168,14 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[48] = jj_gen;
+        jj_la1[56] = jj_gen;
         break label_48;
       }
       n1 = cadena();
-                                                              n +=" " + n1;
+                          n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
            cadena+= n; cadena+=", ";
-    jj_consume_token(TD_CLASS);
-    jj_consume_token(CARACTERES);
-    jj_consume_token(ETIQUETA_FIN);
-    jj_consume_token(DIV);
-    jj_consume_token(CARACTERES);
-    jj_consume_token(ETIQUETA_FIN);
-    jj_consume_token(DIV);
-         System.out.println("Se va a hacer un saltar()");
-    saltar();
-    jj_consume_token(A_CLASS);
-    saltar();
-    jj_consume_token(A_FIN);
-    jj_consume_token(DIV_FIN);
-    jj_consume_token(DIV_FIN);
-    jj_consume_token(TD_FIN);
-                                            cadena+= "null, ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1138,7 +1187,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[49] = jj_gen;
+        jj_la1[57] = jj_gen;
         break label_49;
       }
       n1 = cadena();
@@ -1157,7 +1206,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         ;
         break;
       default:
-        jj_la1[50] = jj_gen;
+        jj_la1[58] = jj_gen;
         break label_50;
       }
       n1 = cadena();
@@ -1168,17 +1217,103 @@ public class LecturaDatos implements LecturaDatosConstants {
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
-    n = cadena();
+    jj_consume_token(DIV);
+    jj_consume_token(CARACTERES);
+    jj_consume_token(ETIQUETA_FIN);
+    jj_consume_token(DIV);
+         System.out.println("Se va a hacer un saltar()");
+    saltar();
+    jj_consume_token(A_CLASS);
     label_51:
     while (true) {
+      jj_consume_token(CARACTERES);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case CARACTERES:
         ;
         break;
       default:
-        jj_la1[51] = jj_gen;
+        jj_la1[59] = jj_gen;
         break label_51;
       }
+    }
+    jj_consume_token(ETIQUETA_FIN);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case SPAN:
+      jj_consume_token(SPAN);
+      label_52:
+      while (true) {
+        jj_consume_token(CARACTERES);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case CARACTERES:
+          ;
+          break;
+        default:
+          jj_la1[60] = jj_gen;
+          break label_52;
+        }
+      }
+      jj_consume_token(ETIQUETA_FIN);
+      n = cadena();
+      label_53:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case CARACTERES:
+          ;
+          break;
+        default:
+          jj_la1[61] = jj_gen;
+          break label_53;
+        }
+        n1 = cadena();
+                         n +=" " + n1;
+      }
+      jj_consume_token(SPAN_FIN);
+      break;
+    default:
+      jj_la1[62] = jj_gen;
+      ;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case CARACTERES:
+      n2 = cadena();
+      label_54:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case CARACTERES:
+          ;
+          break;
+        default:
+          jj_la1[63] = jj_gen;
+          break label_54;
+        }
+        n1 = cadena();
+                            n2 +=" " + n1;
+      }
+                                               n+= n2;
+      break;
+    default:
+      jj_la1[64] = jj_gen;
+      ;
+    }
+    jj_consume_token(A_FIN);
+    jj_consume_token(DIV_FIN);
+    jj_consume_token(DIV_FIN);
+    jj_consume_token(TD_FIN);
+                                    if(n==", "){n="null, ";} cadena+= n + ", ";
+    jj_consume_token(TD_CLASS);
+    jj_consume_token(CARACTERES);
+    jj_consume_token(ETIQUETA_FIN);
+    n = cadena();
+    label_55:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CARACTERES:
+        ;
+        break;
+      default:
+        jj_la1[65] = jj_gen;
+        break label_55;
+      }
       n1 = cadena();
                                                               n +=" " + n1;
     }
@@ -1187,16 +1322,79 @@ public class LecturaDatos implements LecturaDatosConstants {
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case SPAN:
+      jj_consume_token(SPAN);
+      label_56:
+      while (true) {
+        jj_consume_token(CARACTERES);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case CARACTERES:
+          ;
+          break;
+        default:
+          jj_la1[66] = jj_gen;
+          break label_56;
+        }
+      }
+      jj_consume_token(ETIQUETA_FIN);
+      jj_consume_token(TIME);
+      label_57:
+      while (true) {
+        jj_consume_token(CARACTERES);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case CARACTERES:
+          ;
+          break;
+        default:
+          jj_la1[67] = jj_gen;
+          break label_57;
+        }
+      }
+      jj_consume_token(ETIQUETA_FIN);
+      break;
+    default:
+      jj_la1[68] = jj_gen;
+      ;
+    }
     n = cadena();
-    label_52:
+    label_58:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case CARACTERES:
         ;
         break;
       default:
-        jj_la1[52] = jj_gen;
-        break label_52;
+        jj_la1[69] = jj_gen;
+        break label_58;
+      }
+      n1 = cadena();
+                          n +=" " + n1;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case TIME_FIN:
+      jj_consume_token(TIME_FIN);
+      jj_consume_token(SPAN_FIN);
+      break;
+    default:
+      jj_la1[70] = jj_gen;
+      ;
+    }
+    jj_consume_token(TD_FIN);
+   cadena+= n; cadena+=", ";
+    jj_consume_token(TD_CLASS);
+    jj_consume_token(CARACTERES);
+    jj_consume_token(ETIQUETA_FIN);
+    n = cadena();
+    label_59:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CARACTERES:
+        ;
+        break;
+      default:
+        jj_la1[71] = jj_gen;
+        break label_59;
       }
       n1 = cadena();
                                                               n +=" " + n1;
@@ -1207,15 +1405,15 @@ public class LecturaDatos implements LecturaDatosConstants {
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
     n = cadena();
-    label_53:
+    label_60:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case CARACTERES:
         ;
         break;
       default:
-        jj_la1[53] = jj_gen;
-        break label_53;
+        jj_la1[72] = jj_gen;
+        break label_60;
       }
       n1 = cadena();
                                                               n +=" " + n1;
@@ -1226,15 +1424,34 @@ public class LecturaDatos implements LecturaDatosConstants {
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
     n = cadena();
-    label_54:
+    label_61:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case CARACTERES:
         ;
         break;
       default:
-        jj_la1[54] = jj_gen;
-        break label_54;
+        jj_la1[73] = jj_gen;
+        break label_61;
+      }
+      n1 = cadena();
+                                                              n +=" " + n1;
+    }
+    jj_consume_token(TD_FIN);
+           cadena+= n; cadena+=", ";
+    jj_consume_token(TD_CLASS);
+    jj_consume_token(CARACTERES);
+    jj_consume_token(ETIQUETA_FIN);
+    n = cadena();
+    label_62:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CARACTERES:
+        ;
+        break;
+      default:
+        jj_la1[74] = jj_gen;
+        break label_62;
       }
       n1 = cadena();
                                                               n +=" " + n1;
@@ -1243,8 +1460,8 @@ public class LecturaDatos implements LecturaDatosConstants {
            cadena+= n; cadena+="; ";
    System.out.println(cadena);
     jj_consume_token(TR_FIN);
-   {if (true) return cadena;}
-    jj_consume_token(BODY_FIN);
+   System.out.println("Una lectura hecha");
+  {if (true) return cadena;}
     throw new Error("Missing return statement in function");
   }
 
@@ -1272,7 +1489,7 @@ public class LecturaDatos implements LecturaDatosConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[55];
+  static final private int[] jj_la1 = new int[75];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -1280,10 +1497,10 @@ public class LecturaDatos implements LecturaDatosConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x7800,0x7800,0x4000,0x8000000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,};
+      jj_la1_0 = new int[] {0x7800,0x7800,0x4000,0x8000000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x4000,0x0,0x0,0x4000,0x0,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x4000,0x0,0x0,0x4000,0x4000,0x0,0x4000,0x0,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x4000,0x0,0x4000,0x4000,0x4000,0x4000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0xc841,0xc841,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_1 = new int[] {0xc841,0xc841,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x10000,0x0,0x20000,0x10000,0x0,0x20000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x40,0x0,0x100,0x40,0x0,0x0,0x1000,0x0,0x2000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1000,0x0,0x0,0x0,0x0,0x0,0x1000,0x0,0x800000,0x0,0x0,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -1304,7 +1521,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 55; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 75; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1318,7 +1535,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 55; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 75; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -1335,7 +1552,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 55; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 75; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1345,7 +1562,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 55; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 75; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -1361,7 +1578,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 55; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 75; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1370,7 +1587,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 55; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 75; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -1421,12 +1638,12 @@ public class LecturaDatos implements LecturaDatosConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[52];
+    boolean[] la1tokens = new boolean[56];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 55; i++) {
+    for (int i = 0; i < 75; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -1438,7 +1655,7 @@ public class LecturaDatos implements LecturaDatosConstants {
         }
       }
     }
-    for (int i = 0; i < 52; i++) {
+    for (int i = 0; i < 56; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

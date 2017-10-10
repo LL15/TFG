@@ -97,13 +97,21 @@ public interface LecturaDatosConstants {
   /** RegularExpression Id. */
   int STRONG_FIN = 47;
   /** RegularExpression Id. */
-  int FONT = 48;
+  int EM = 48;
   /** RegularExpression Id. */
-  int FONT_FIN = 49;
+  int EM_FIN = 49;
   /** RegularExpression Id. */
-  int P = 50;
+  int FONT = 50;
   /** RegularExpression Id. */
-  int P_FIN = 51;
+  int FONT_FIN = 51;
+  /** RegularExpression Id. */
+  int P = 52;
+  /** RegularExpression Id. */
+  int P_FIN = 53;
+  /** RegularExpression Id. */
+  int TIME = 54;
+  /** RegularExpression Id. */
+  int TIME_FIN = 55;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -158,10 +166,14 @@ public interface LecturaDatosConstants {
     "\"</span>\"",
     "\"<strong>\"",
     "\"</strong>\"",
+    "\"<em>\"",
+    "\"</em>\"",
     "\"<font>\"",
     "\"</font>\"",
     "\"<p>\"",
     "\"</p>\"",
+    "\"<time \"",
+    "\"</time>\"",
   };
 
 }
