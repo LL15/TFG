@@ -8,7 +8,9 @@ public class LecturaDatos implements LecturaDatosConstants {
   //Fichero del que se extraen los datos
   public final static String path = "C:\u005c\u005cbisdev_jira_com.html";
 
-  public final static String path1 = "C:\u005c\u005cprobatina.txt";
+  //Ficheros en los que se escribe
+  public final static String path1 = "C:\u005c\u005ccrear_tabla.sql";
+  public final static String path2 = "C:\u005c\u005crellenar_tabla.sql";
 
   public static void main(String args []) throws ParseException
   {
@@ -16,40 +18,66 @@ public class LecturaDatos implements LecturaDatosConstants {
     //Se abre el fichero
     try {
       BufferedReader buf = new BufferedReader(new FileReader (path));
-      BufferedWriter esc = new BufferedWriter(new FileWriter (path1));
+
+      //Objetos para trabajar con los ficheros a escribir
+        //Fichero para crear la tabla en el Staging Area
+      BufferedWriter fCrear = new BufferedWriter(new FileWriter (path1));
+        //Fichero para llenar el Staging Area
+      BufferedWriter fPoblar = new BufferedWriter(new FileWriter (path2));
 
       //Se crea el parser
       LecturaDatos parser = new LecturaDatos(buf);
 
-          //Se empieza a leer el fichero
+          //Se empieza a leer el fichero de datos
           parser.leer_head();
+
           //Obtencion del número de incidencias que hay
           int incidencias = parser.leer_body();
           //Obtencion de las cabeceras de la tabla
           String [] cab = parser.leerCabecera();
-          String escr = "";
-          int i=0;
-          while(i<cab.length){
-            escr= escr + cab[i];
-            escr= escr + ", ";
-            i++;
-          }
-          esc.write(escr);
-          esc.newLine();
-          esc.flush();
-          i=0;
-          //Se empiezan a leer los atributos de las incidencias
-          while(i<incidencias) {
-            System.out.println("Lectura numero "+i);
-            esc.write(parser.leerContenido());//Lee la primera incidencia
-            esc.newLine();
-            i++;
-          }
-          esc.flush();
+          String cabecera= "";
 
-          //Se cierra el fichero
-          System.out.println("Se cierra el fichero");
+          /***** Se crea el fichero para crear la tabla *****/
+          fCrear.write("CREATE TABLE stg_area ("); fCrear.newLine();
+          fCrear.flush();
+          for(int i=0; i<cab.length-1;i++) {
+            if(i!=1) {
+              fCrear.write("\u0009"+cab[i]+"\u0009VARCHAR(2000),"); fCrear.newLine();
+            }
+            else {
+              fCrear.write("\u0009"+cab[i]+"\u0009VARCHAR(2000)\u0009PRIMARY KEY,");
+              fCrear.newLine();
+            }
+            fCrear.flush();
+            cabecera = cabecera + cab[i] + ", ";
+          }
+          fCrear.write("\u0009"+cab[cab.length-1]+"\u0009VARCHAR(2000)");
+          fCrear.newLine(); fCrear.write(");"); fCrear.flush();
+
+          //Se quita la coma que sobra de la cabecera
+          cabecera = cabecera   + cab[cab.length-1];
+          System.out.println(cabecera);
+
+          /***** Se crea el fichero para insertar los datos *****/
+          for(int i=0; i<incidencias; i++) {
+            fPoblar.write("INSERT INTO stg_area ( ");
+            //Se inserta la cabecera
+            fPoblar.write(cabecera);
+            fPoblar.write(") VALUES");
+            //Se insertan los datos correspondientes a la incidencia
+            fPoblar.write(parser.leerContenido());
+            fPoblar.newLine();
+            fPoblar.flush();
+          }
+
+          //Se lee el final el fichero
+          parser.leerFinal();
+
+          //Se cierran los ficheros
+          System.out.println("Se cierran los ficheros");
           buf.close();
+          fCrear.close();
+          fPoblar.close();
     }
     catch(Exception e) {
                 System.out.println("Exception " + e.getMessage());
@@ -216,7 +244,7 @@ public class LecturaDatos implements LecturaDatosConstants {
   }
 
   static final public String leerContenido() throws ParseException {
-                         String n="", n1, n2, cadena=""; int num;
+                         String n="", n1, n2, cadena="("; int num;
    System.out.println("Se ha entrado en leerContenido");
     jj_consume_token(TR_BODY);
     saltar();
@@ -238,7 +266,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+= "', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -272,7 +300,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     }
     jj_consume_token(A_FIN);
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -293,7 +321,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     }
     jj_consume_token(P_FIN);
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -312,7 +340,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -346,7 +374,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     }
     jj_consume_token(SPAN_FIN);
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -365,7 +393,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -400,7 +428,7 @@ public class LecturaDatos implements LecturaDatosConstants {
       ;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -435,7 +463,7 @@ public class LecturaDatos implements LecturaDatosConstants {
       ;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -454,7 +482,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -473,7 +501,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -492,7 +520,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -511,7 +539,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -530,7 +558,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -549,7 +577,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -568,7 +596,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -587,7 +615,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -606,7 +634,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -625,7 +653,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -770,7 +798,7 @@ public class LecturaDatos implements LecturaDatosConstants {
       ;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -789,7 +817,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -808,7 +836,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -827,7 +855,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -845,7 +873,7 @@ public class LecturaDatos implements LecturaDatosConstants {
       n1 = cadena();
                                                               n +=" " + n1;
     }
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_FIN);
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
@@ -865,7 +893,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -884,7 +912,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -903,7 +931,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -940,7 +968,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
   System.out.println("Empieza la lectura de los custom fields");
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
@@ -960,7 +988,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -979,7 +1007,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -998,7 +1026,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1017,7 +1045,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1036,7 +1064,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1055,7 +1083,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1074,7 +1102,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1093,7 +1121,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1112,7 +1140,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1131,7 +1159,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1150,7 +1178,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1175,7 +1203,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                           n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1194,7 +1222,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1213,7 +1241,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1299,7 +1327,8 @@ public class LecturaDatos implements LecturaDatosConstants {
     jj_consume_token(DIV_FIN);
     jj_consume_token(DIV_FIN);
     jj_consume_token(TD_FIN);
-                                    if(n==", "){n="null, ";} cadena+= n + ", ";
+                                    if(n==", "){n="null, ";}
+  cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1318,7 +1347,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1381,7 +1410,7 @@ public class LecturaDatos implements LecturaDatosConstants {
       ;
     }
     jj_consume_token(TD_FIN);
-   cadena+= n; cadena+=", ";
+   cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1400,7 +1429,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1419,7 +1448,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1438,7 +1467,7 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+=", ";
+           cadena+= "'"; cadena+= n; cadena+="', ";
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);
     jj_consume_token(ETIQUETA_FIN);
@@ -1457,12 +1486,71 @@ public class LecturaDatos implements LecturaDatosConstants {
                                                               n +=" " + n1;
     }
     jj_consume_token(TD_FIN);
-           cadena+= n; cadena+="; ";
-   System.out.println(cadena);
+           cadena+= "'"; cadena+= n; cadena+="' );";
     jj_consume_token(TR_FIN);
    System.out.println("Una lectura hecha");
+  System.out.println("Fin de leerContenido");
   {if (true) return cadena;}
     throw new Error("Missing return statement in function");
+  }
+
+  static final public void leerFinal() throws ParseException {
+   System.out.println("Se entra en leerFinal");
+    jj_consume_token(TBODY_FIN);
+    jj_consume_token(TABLA_FIN);
+    jj_consume_token(DIV);
+    label_63:
+    while (true) {
+      jj_consume_token(CARACTERES);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CARACTERES:
+        ;
+        break;
+      default:
+        jj_la1[75] = jj_gen;
+        break label_63;
+      }
+    }
+    jj_consume_token(ETIQUETA_FIN);
+    jj_consume_token(DIV_FIN);
+    jj_consume_token(TABLA_INICIO);
+    label_64:
+    while (true) {
+      jj_consume_token(CARACTERES);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CARACTERES:
+        ;
+        break;
+      default:
+        jj_la1[76] = jj_gen;
+        break label_64;
+      }
+    }
+    jj_consume_token(ETIQUETA_FIN);
+    jj_consume_token(TR);
+    jj_consume_token(TD_BG);
+    jj_consume_token(FONT);
+    label_65:
+    while (true) {
+      jj_consume_token(CARACTERES);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CARACTERES:
+        ;
+        break;
+      default:
+        jj_la1[77] = jj_gen;
+        break label_65;
+      }
+    }
+    jj_consume_token(ETIQUETA_FIN);
+    saltar();
+    jj_consume_token(FONT_FIN);
+    jj_consume_token(TD_FIN);
+    jj_consume_token(TR_FIN);
+    jj_consume_token(TABLA_FIN);
+    jj_consume_token(BODY_FIN);
+    jj_consume_token(HTML_FIN);
+   System.out.println("Se ha leido el final de la tabla");
   }
 
   static final public String cadena() throws ParseException {
@@ -1489,7 +1577,7 @@ public class LecturaDatos implements LecturaDatosConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[75];
+  static final private int[] jj_la1 = new int[78];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -1497,10 +1585,10 @@ public class LecturaDatos implements LecturaDatosConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x7800,0x7800,0x4000,0x8000000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x4000,0x0,0x0,0x4000,0x0,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x4000,0x0,0x0,0x4000,0x4000,0x0,0x4000,0x0,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x4000,0x0,0x4000,0x4000,0x4000,0x4000,};
+      jj_la1_0 = new int[] {0x7800,0x7800,0x4000,0x8000000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x4000,0x0,0x0,0x4000,0x0,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x4000,0x0,0x0,0x4000,0x4000,0x0,0x4000,0x0,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x4000,0x0,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,0x4000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0xc841,0xc841,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x10000,0x0,0x20000,0x10000,0x0,0x20000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x40,0x0,0x100,0x40,0x0,0x0,0x1000,0x0,0x2000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1000,0x0,0x0,0x0,0x0,0x0,0x1000,0x0,0x800000,0x0,0x0,0x0,0x0,};
+      jj_la1_1 = new int[] {0xc841,0xc841,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x10000,0x0,0x20000,0x10000,0x0,0x20000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x40,0x0,0x100,0x40,0x0,0x0,0x1000,0x0,0x2000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1000,0x0,0x0,0x0,0x0,0x0,0x1000,0x0,0x800000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -1521,7 +1609,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 75; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 78; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1535,7 +1623,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 75; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 78; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -1552,7 +1640,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 75; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 78; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1562,7 +1650,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 75; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 78; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -1578,7 +1666,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 75; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 78; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1587,7 +1675,7 @@ public class LecturaDatos implements LecturaDatosConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 75; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 78; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -1643,7 +1731,7 @@ public class LecturaDatos implements LecturaDatosConstants {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 75; i++) {
+    for (int i = 0; i < 78; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

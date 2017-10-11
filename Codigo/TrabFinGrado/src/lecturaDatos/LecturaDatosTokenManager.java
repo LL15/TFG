@@ -244,7 +244,9 @@ static private int jjMoveStringLiteralDfa4_0(long old0, long active0)
       case 114:
          return jjMoveStringLiteralDfa5_0(active0, 0x804000000000L);
       case 116:
-         return jjMoveStringLiteralDfa5_0(active0, 0x4000400000000L);
+         if ((active0 & 0x4000000000000L) != 0L)
+            return jjStopAtPos(4, 50);
+         return jjMoveStringLiteralDfa5_0(active0, 0x400000000L);
       case 118:
          return jjMoveStringLiteralDfa5_0(active0, 0x40000000000L);
       case 121:
@@ -276,8 +278,6 @@ static private int jjMoveStringLiteralDfa5_0(long old0, long active0)
             return jjStopAtPos(5, 9);
          else if ((active0 & 0x40000000000L) != 0L)
             return jjStopAtPos(5, 42);
-         else if ((active0 & 0x4000000000000L) != 0L)
-            return jjStopAtPos(5, 50);
          break;
       case 97:
          return jjMoveStringLiteralDfa6_0(active0, 0x8000040000L);
@@ -2190,7 +2190,7 @@ null, "\74\164\141\142\154\145\40", "\74\57\164\141\142\154\145\76",
 "\74\57\141\76", "\74\144\151\166\40", "\74\57\144\151\166\76", 
 "\74\151\155\147\40\163\162\143\75\42", "\74\163\160\141\156", "\74\57\163\160\141\156\76", 
 "\74\163\164\162\157\156\147\76", "\74\57\163\164\162\157\156\147\76", "\74\145\155\76", "\74\57\145\155\76", 
-"\74\146\157\156\164\76", "\74\57\146\157\156\164\76", "\74\160\76", "\74\57\160\76", 
+"\74\146\157\156\164", "\74\57\146\157\156\164\76", "\74\160\76", "\74\57\160\76", 
 "\74\164\151\155\145\40", "\74\57\164\151\155\145\76", };
 
 /** Lexer state names. */

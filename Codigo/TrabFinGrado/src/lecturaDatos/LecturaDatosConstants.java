@@ -168,7 +168,7 @@ public interface LecturaDatosConstants {
     "\"</strong>\"",
     "\"<em>\"",
     "\"</em>\"",
-    "\"<font>\"",
+    "\"<font\"",
     "\"</font>\"",
     "\"<p>\"",
     "\"</p>\"",
