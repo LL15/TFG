@@ -12,7 +12,7 @@ public class LecturaDatos implements LecturaDatosConstants {
   public final static String path1 = "C:\u005c\u005ccrear_tabla.sql";
   public final static String path2 = "C:\u005c\u005crellenar_tabla.sql";
 
-  public static void main(String args []) throws ParseException
+public static void main(String args []) throws ParseException
   {
     System.out.println("Acaba de empezar el main");
     //Se abre el fichero
@@ -42,16 +42,25 @@ public class LecturaDatos implements LecturaDatosConstants {
           fCrear.flush();
           for(int i=0; i<cab.length-1;i++) {
             if(i!=1) {
-              fCrear.write("\u0009"+cab[i]+"\u0009VARCHAR(2000),"); fCrear.newLine();
+              if(i==18 || i==19 || i==21 || i==22 || i==23 || i==32
+               || i==33 || i==34 || i==47) {
+                 fCrear.write("\u0009"+cab[i]+"\u0009INT,"); fCrear.newLine();
+               }
+               else if(i==2 || i==28 || i==27 || i == 20) {
+                 fCrear.write("\u0009"+cab[i]+"\u0009TEXT,"); fCrear.newLine();
+              }
+              else {
+                fCrear.write("\u0009"+cab[i]+"\u0009VARCHAR(100),"); fCrear.newLine();
+              }
             }
             else {
-              fCrear.write("\u0009"+cab[i]+"\u0009VARCHAR(2000)\u0009PRIMARY KEY,");
+              fCrear.write("\u0009"+cab[i]+"\u0009VARCHAR(20)\u0009PRIMARY KEY,");
               fCrear.newLine();
             }
             fCrear.flush();
             cabecera = cabecera + cab[i] + ", ";
           }
-          fCrear.write("\u0009"+cab[cab.length-1]+"\u0009VARCHAR(2000)");
+          fCrear.write("\u0009"+cab[cab.length-1]+"\u0009VARCHAR(100)");
           fCrear.newLine(); fCrear.write(");"); fCrear.flush();
 
           //Se quita la coma que sobra de la cabecera
@@ -693,7 +702,7 @@ public class LecturaDatos implements LecturaDatosConstants {
       n1 = cadena();
                           n +=" " + n1;
     }
-   cadena+= n; cadena+=", ";
+   cadena +="'"; cadena+= n; cadena+=" - ";
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case A_FIN:
       jj_consume_token(A_FIN);
@@ -729,9 +738,10 @@ public class LecturaDatos implements LecturaDatosConstants {
         n1 = cadena();
                           n +=" " + n1;
       }
-   cadena+= n; cadena+=", ";
+   cadena+= n; cadena+=" - ";
       jj_consume_token(A_FIN);
     }
+                                         cadena +="', ";
     jj_consume_token(TD_FIN);
     jj_consume_token(TD_CLASS);
     jj_consume_token(CARACTERES);

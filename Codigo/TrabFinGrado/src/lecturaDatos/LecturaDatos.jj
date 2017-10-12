@@ -12,7 +12,8 @@ public class LecturaDatos{
   //Ficheros en los que se escribe
   public final static String path1 = "C:\\crear_tabla.sql";
   public final static String path2 = "C:\\rellenar_tabla.sql";
-    public static void main(String args []) throws ParseException  {
+  public static void main(String args []) throws ParseException
+  {
     System.out.println("Acaba de empezar el main");
     //Se abre el fichero
     try {
@@ -41,16 +42,25 @@ public class LecturaDatos{
 	  fCrear.flush();
 	  for(int i=0; i<cab.length-1;i++) {
 	    if(i!=1) {
-	      fCrear.write("	"+cab[i]+"	VARCHAR(2000),"); fCrear.newLine();
+	      if(i==18 || i==19 || i==21 || i==22 || i==23 || i==32
+	       || i==33 || i==34 || i==47) {
+	         fCrear.write("	"+cab[i]+"	INT,"); fCrear.newLine();
+	       }
+	       else if(i==2 || i==28 || i==27 || i == 20) {
+	         fCrear.write("	"+cab[i]+"	TEXT,"); fCrear.newLine();
+	      }
+	      else { 
+	      	fCrear.write("	"+cab[i]+"	VARCHAR(100),"); fCrear.newLine();
+	      }
 	    }
 	    else {
-	      fCrear.write("	"+cab[i]+"	VARCHAR(2000)	PRIMARY KEY,");
+	      fCrear.write("	"+cab[i]+"	VARCHAR(20)	PRIMARY KEY,");
 	      fCrear.newLine();
 	    }
 	    fCrear.flush();
 	    cabecera = cabecera	+ cab[i] + ", ";
 	  }
-	  fCrear.write("	"+cab[cab.length-1]+"	VARCHAR(2000)");
+	  fCrear.write("	"+cab[cab.length-1]+"	VARCHAR(100)");
 	  fCrear.newLine(); fCrear.write(");"); fCrear.flush();
 
 	  //Se quita la coma que sobra de la cabecera
@@ -79,7 +89,9 @@ public class LecturaDatos{
 	  fPoblar.close();
     }
     catch(Exception e) {
-		System.out.println("Exception " + e.getMessage());  	}  }
+		System.out.println("Exception " + e.getMessage());
+  	}
+  }
 }PARSER_END(LecturaDatos)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* Generales */{  < HTML : "<html xmlns=\"http://www.w3.org/TR/REC-html40\">" >
 | < HTML_FIN : "</html>" >
 | < HEAD : "<head>" >
@@ -276,9 +288,10 @@ String leerContenido(): {String n="", n1, n2, cadena="("; int num;}
   //Thumbnail
   <TD_CLASS><CARACTERES><ETIQUETA_FIN>(<A_HREF><CARACTERES><ETIQUETA_FIN>)?
   n=cadena()(n1=cadena() {n +=" " + n1;})* 
-  {cadena+= n; cadena+=", ";}(<A_FIN>)?(<A_HREF><CARACTERES><ETIQUETA_FIN>
+  {cadena +="'"; cadena+= n; cadena+=" - ";}(<A_FIN>)?
+  (<A_HREF><CARACTERES><ETIQUETA_FIN>
   n=cadena()(n1=cadena() {n +=" " + n1;})* 
-  {cadena+= n; cadena+=", ";}<A_FIN>)*<TD_FIN>
+  {cadena+= n; cadena+=" - ";}<A_FIN>)* {cadena +="', ";}<TD_FIN>
   //TimeOriginalRemaining
   <TD_CLASS><CARACTERES><ETIQUETA_FIN>num=numero()<TD_FIN>
   {cadena+= num; cadena+=", ";}
