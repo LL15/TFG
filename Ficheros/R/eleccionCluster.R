@@ -2,7 +2,6 @@
 library("XML")
 library("methods")
 #Recuperacion de los datos del XML
-result <- xmlParse(file = "C:\\resulQuery.xml")
 df <- xmlToDataFrame("C:\\resulQuery.xml")
 #Separacion de algunos datos numericos
 o_e <- df[ , "Original_Estimate"]
