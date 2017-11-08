@@ -29,5 +29,5 @@ mod <- lm(t_s~o_e)
 plot(o_e, t_s, main="ScatterPlot")
 abline(mod, col=3, lwd=3)
 
-#Analisi de la tabla de varianza
+#Analisis de la tabla de varianza
 anova(mod)
