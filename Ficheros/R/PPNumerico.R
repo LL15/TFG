@@ -34,7 +34,16 @@ for(i in 1:769){
     nOE = nOE + 1
   }
 }
-sumOE/nOE
+rm(i)
+mOE_sin_0 = sumOE/nOE
+
+#Reemplazo de los valores
+for(i in 1:769){
+  if(o_e[i] != 0){
+    o_e[i] = mOE_sin_0
+  }
+}
+rm(i)
 
 #Vector numerico del tiempo original estimado de las tareas
 t_s <- as.numeric(as.character(df$Time_Spent))
@@ -66,4 +75,13 @@ for(i in 1:769){
     nTS = nTS + 1
   }
 }
-sumTS/nTS
+rm(i)
+mTS_sin_0 = sumTS/nTS
+
+#Reemplazo de los valores
+for(i in 1:769){
+  if(t_s[i] != 0){
+    t_s[i] = mTS_sin_0
+  }
+}
+rm(i)
