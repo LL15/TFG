@@ -1,4 +1,9 @@
-#Modificacion de la pririodad
+#Las variables textuales se transforman en numericas
+comp <- as.numeric(df$Component_s)
+i_ty <- as.numeric(df$Issue_Type)
+asig <- as.numeric(df$Assignee)
+spr <- as.numeric(df$Sprint)
+ep_link <- as.numeric(df$Epic_Link)
 pr <- as.numeric(df$Priority)
 for (i in 1:769){
   if(pr[i] == 4){#Minor
@@ -14,6 +19,7 @@ for (i in 1:769){
     pr[i] = 4
   }
 }
+rm(i)
 #Diagrama de dispersion entre las variables sin la linea de
 #regresion.
 plot(o_e, t_s, main = "Relación entre tiempo estimado y tiempo
@@ -28,7 +34,21 @@ plot(df$Assignee, t_s, main = "Relación entre persona encargada y tiempo
      empleado", xlab="Persona encargada", ylab = "Tiempo empleado", pch = 4)
 plot(df$Sprint, t_s, main = "Relación entre sprint y tiempo empleado",
      xlab="Sprint", ylab = "Tiempo empleado", pch = 4)
+plot(df$Epic_Link, t_s, main = "Relación entre el epic link y tiempo
+     empleado", xlab="Epic Link", ylab = "Tiempo empleado", pch = 4)
+
+#Se hace una matriz con todos los datos
+matrizCorr = cbind(t_s, o_e, pr, i_ty, comp, asig, spr, ep_link)
+
 #Matriz de correlacion entre las variables
+  #Graficas
+pairs(t_s ~ o_e + pr + i_ty)
+pairs(t_s ~ comp + asig)
+pairs(t_s ~ spr + ep_link)
+  #Textual
+cor(t_s, o_e, pr)
+
+#Recta de la regresion lineal
   # Valores de coeficientes estimados son la ordenada en el origen y la
   #pendiente de la recta
   # Multiple R-Squared coeficiente de determinacion
