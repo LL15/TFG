@@ -1,4 +1,4 @@
-CREATE TABLE stg_area(
+CREATE TABLE stg_area (
 	Project	VARCHAR(100),
 	Issue_Key	VARCHAR(20)	PRIMARY KEY,
 	Summary	TEXT,
@@ -13,7 +13,7 @@ CREATE TABLE stg_area(
 	Last_Viewed	VARCHAR(100),
 	Updated	VARCHAR(100),
 	Resolved	VARCHAR(100),
-	Affects_Version_s	VARCHAR(100),
+	Affect_Version_s	VARCHAR(100),
 	Fix_Version_s	VARCHAR(100),
 	Component_s	VARCHAR(100),
 	Due_Date	VARCHAR(100),

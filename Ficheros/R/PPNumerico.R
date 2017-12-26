@@ -39,7 +39,7 @@ mOE_sin_0 = sumOE/nOE
 
 #Reemplazo de los valores
 for(i in 1:769){
-  if(o_e[i] != 0){
+  if(o_e[i] == 0){
     o_e[i] = mOE_sin_0
   }
 }
@@ -80,7 +80,7 @@ mTS_sin_0 = sumTS/nTS
 
 #Reemplazo de los valores
 for(i in 1:769){
-  if(t_s[i] != 0){
+  if(t_s[i] == 0){
     t_s[i] = mTS_sin_0
   }
 }
