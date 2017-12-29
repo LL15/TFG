@@ -94,6 +94,7 @@ cor(matrizCorr)
 
 #Semilla para crear un vector aleatorio y dividir los datos en entrenamiento y test
 set.seed(1234)
+#Vector que dividira los datoses: 70% entrenamiento, 30% test
 ind <- sample(2, nrow(matrizCorr), replace = TRUE, prob = c(0.7, 0.3))
 ind = as.numeric(ind)
 
