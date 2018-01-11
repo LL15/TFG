@@ -1,12 +1,17 @@
 #Regresion con la que se hace la prediccion
 step
+#Regresión para todos los datos con la que se hara la kf cv
+reg_lineal <- lm(t_s ~ o_e + spr)
 #Datos de entrenamieto y test
 train <- data.frame(cbind(t_sE,o_eE,sprE))
 test <- data.frame(cbind(t_sT,o_eT,sprT))
+#Conjunto total de datos
+total <- data.frame(cbind(t_s,o_e,spr))
 
 #K-fold cross-validation
+library(lattice)
 library(DAAG)
-kfcv = cv.lm(train, step, m=5)
+kfcv = cv.lm(total, reg_lineal, m=10)
 
 #Prediccion
 x <- predict.lm(step, mydata)
