@@ -80,17 +80,32 @@ plot(df$Sprint, t_s, main = "Relación entre sprint y tiempo empleado",
      xlab="Sprint", ylab = "Tiempo empleado", pch = 4)
 plot(df$Epic_Link, t_s, main = "Relación entre el epic link y tiempo
      empleado", xlab="Epic Link", ylab = "Tiempo empleado", pch = 4)
+plot(fr_D, t_s, main = "Relación entre las frecuencias de las
+     descripciones y tiempo empleado", xlab="Frecuencias",
+     ylab = "Tiempo empleado", pch = 4)
+plot(fr_R, t_s, main = "Relación entre las frecuencias de los
+     resúmenes y tiempo empleado", xlab="Frecuencias",
+     ylab = "Tiempo empleado", pch = 4)
 
 #Se hace una matriz con todos los datos
-matrizCorr = cbind(t_s, o_e, pr, i_ty, comp, asig, spr, ep_link)
+matrizCorr = cbind(t_s, o_e, pr, i_ty, comp, asig, spr, ep_link,
+                   fr_D, fr_R)
 
 #Matriz de correlacion entre las variables
 #Graficas
 pairs(t_s ~ o_e + pr + i_ty)
 pairs(t_s ~ comp + asig)
 pairs(t_s ~ spr + ep_link)
+pairs(t_s ~ fr_D + fr_R)
 #Textual
 cor(matrizCorr)
+
+#Pruevas ANOVA con variables categoricas
+summary(aov(t_s~spr))
+summary(aov(t_s~comp))
+summary(aov(t_s~asig))
+summary(aov(t_s~ep_link))
+summary(aov(t_s~i_ty))
 
 #Semilla para crear un vector aleatorio y dividir los datos en entrenamiento y test
 set.seed(1234)
@@ -101,6 +116,7 @@ ind = as.numeric(ind)
 cbind(o_e, ind); cbind(comp, ind); cbind(pr, ind)
 cbind(t_s, ind); cbind(ep_link, ind); cbind(spr, ind)
 cbind(asig, ind); cbind(i_ty, ind)
+cbind(fr_D, ind); cbind(fr_R, ind)
 #Se dividen los datos entre los datos de entrenamiento y los de test
 asigE <- asig[ind == 1]
 asigT <- asig[ind == 2]
@@ -122,6 +138,12 @@ prT <- pr[ind == 2]
 
 sprE <- spr[ind == 1]
 sprT <- spr[ind == 2]
+
+fr_DE <- fr_D[ind == 1]
+fr_DT <- fr_D[ind == 2]
+
+fr_RE <- fr_R[ind == 1]
+fr_RT <- fr_R[ind == 2]
 
 t_sE <- t_s[ind == 1]
 t_sT <- t_s[ind == 2]
@@ -170,6 +192,20 @@ plot(ep_linkE, t_sE, main = "Recta de regresión entre el epic
      link y tiempo empleado", xlab="Epic Link", ylab = "Tiempo empleado", pch = 4)
 abline(regEL)
 summary(regEL)
+
+regFD <-lm (t_sE ~ fr_DE)
+plot(fr_DE, t_sE, main = "Recta de regresión entre frecuencias
+     totales de las descripciones y tiempo empleado",
+     xlab="Frecuencias totales", ylab = "Tiempo empleado", pch = 4)
+abline(regFD)
+summary(regFD)
+
+regFR <-lm (t_sE ~ fr_RE)
+plot(fr_RE, t_sE, main = "Recta de regresión entre frecuencias
+     totales de los resumenes y tiempo empleado",
+     xlab="Frecuencia total", ylab = "Tiempo empleado", pch = 4)
+abline(regFR)
+summary(regFR)
 
 #Predicciones
 x = predict.lm(regOE, data.frame(o_eT))
@@ -248,3 +284,30 @@ for(i in 1:235){
 error_medio/235
 var(ep_linkE)
 var(ep_linkT)
+
+x = predict.lm(regFD, data.frame(fr_DT))
+x = as.numeric(x)
+error = 0; error_medio = 0
+for(i in 1:235){
+  error = t_sT[i]^2-x[i]^2
+  error_medio = error_medio + error
+}
+error_medio/235
+var(fr_DE)
+var(fr_DT)
+
+x = predict.lm(regFR, data.frame(fr_RT))
+x = as.numeric(x)
+error = 0; error_medio = 0
+for(i in 1:235){
+  error = t_sT[i]^2-x[i]^2
+  error_medio = error_medio + error
+}
+error_medio/235
+var(fr_RE)
+var(fr_RT)
+
+#Funcion stepAIC para comprobar que variables son las que
+library(MASS)
+reg <- lm(t_sE ~ o_eE + prE + compE + ep_linkE + i_tyE + asigE + sprE + fr_DE + fr_RE)
+stepAIC(reg)
