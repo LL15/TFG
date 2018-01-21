@@ -78,10 +78,15 @@ for(i in 1:769){
 rm(i)
 mTS_sin_0 = sumTS/nTS
 
-#Reemplazo de los valores
+#Obtencion del vector con los indices de los datos nulos
+t_sTestFinal = as.numeric(as.character(df$Time_Spent))
+num = NULL; indices = NULL;
+totalNulos = 0
 for(i in 1:769){
-  if(t_s[i] == 0){
-    t_s[i] = mTS_sin_0
+  if(t_sTestFinal[i] == 0){
+    totalNulos = totalNulos + 1
+    indices = rbind(indices, i)
   }
 }
 rm(i)
+indices = as.vector(indices[,1])
