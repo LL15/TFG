@@ -5,13 +5,15 @@ reg_lineal <- lm(t_s ~ o_e + spr)
 #Datos de entrenamieto y test
 train <- data.frame(cbind(t_sE,o_eE,sprE))
 test <- data.frame(cbind(t_sT,o_eT,sprT))
+cbind(t_s[c(indices)],o_e[c(indices)],spr[c(indices)])
 #Conjunto total de datos
 total <- data.frame(cbind(t_s,o_e,spr))
 
 #K-fold cross-validation
 library(lattice)
 library(DAAG)
-kfcv = cv.lm(total, reg_lineal, m=10)
+kfcv10 = cv.lm(total, reg_lineal, m=10)
+kfcv5 = cv.lm(total, reg_lineal, m=10)
 
 #Prediccion
 x <- predict.lm(step, mydata)
