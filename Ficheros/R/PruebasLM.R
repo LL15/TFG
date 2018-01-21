@@ -15,6 +15,7 @@ for(i in 1:769){
 }
 rm(i)
 mOE_sin_0 = sumOE/nOE
+#Reemplazo de los valores nulos
 for(i in 1:769){
   if(o_e[i] == 0){
     o_e[i] = mOE_sin_0
@@ -32,6 +33,7 @@ for(i in 1:769){
   }
 }
 rm(i)
+#Reemplazo de los valores nulos
 mTS_sin_0 = sumTS/nTS
 for(i in 1:769){
   if(t_s[i] == 0){
@@ -310,4 +312,4 @@ var(fr_RT)
 #Funcion stepAIC para comprobar que variables son las que
 library(MASS)
 reg <- lm(t_sE ~ o_eE + prE + compE + ep_linkE + i_tyE + asigE + sprE + fr_DE + fr_RE)
-stepAIC(reg)
+reg = stepAIC(reg)
