@@ -68,25 +68,24 @@ quantile(t_s, seq(0, 1, 0.005))
 medTS = mean(t_s)
 #Media de los valores que no son 0
 sumTS = 0; nTS = 0
-
+indices = NULL;
 for(i in 1:769){
   if(t_s[i] != 0){
     sumTS = sumTS + t_s[i]
     nTS = nTS + 1
-  }
-}
-rm(i)
-mTS_sin_0 = sumTS/nTS
-
-#Obtencion del vector con los indices de los datos nulos
-t_sTestFinal = as.numeric(as.character(df$Time_Spent))
-num = NULL; indices = NULL;
-totalNulos = 0
-for(i in 1:769){
-  if(t_sTestFinal[i] == 0){
-    totalNulos = totalNulos + 1
     indices = rbind(indices, i)
   }
 }
 rm(i)
+mTS_sin_0 = sumTS/nTS
+#Obtencion del vector con los indices de los datos nulos
 indices = as.vector(indices[,1])
+
+#Reemplazo de los valores nulos
+for(i in 1:769){
+  if(t_s[i] == 0){
+    t_s[i] = mTS_sin_0
+  }
+}
+rm(i); rm(mTS_sin_0);
+rm(sumTS); rm(nTS)
