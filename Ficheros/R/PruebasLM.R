@@ -109,6 +109,7 @@ summary(aov(t_s~asig))
 summary(aov(t_s~ep_link))
 summary(aov(t_s~i_ty))
 
+
 #Semilla para crear un vector aleatorio y dividir los datos en entrenamiento y test
 set.seed(1234)
 #Vector que dividira los datoses: 70% entrenamiento, 30% test
@@ -316,8 +317,3 @@ library(MASS)
 reg <- lm(t_sE ~ o_eE + prE + compE + ep_linkE + i_tyE + asigE + sprE + fr_DE + fr_RE)
 reg = stepAIC(reg)
 summary(reg)
-
-#Mas del 70% de datos entrenamiento
-reg1 <- lm(t_sTestFinal ~ o_e + pr + comp + ep_link + i_ty + asig + spr + fr_D + fr_R, entrenamiento)
-reg1 = stepAIC(reg1)
-summary(reg1)
