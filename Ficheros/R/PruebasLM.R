@@ -309,7 +309,15 @@ error_medio/235
 var(fr_RE)
 var(fr_RT)
 
-#Funcion stepAIC para comprobar que variables son las que
+#Funcion stepAIC para comprobar que variables son mejores para 
+#la prediccion 
 library(MASS)
+#70% Datos entrenamiento
 reg <- lm(t_sE ~ o_eE + prE + compE + ep_linkE + i_tyE + asigE + sprE + fr_DE + fr_RE)
 reg = stepAIC(reg)
+summary(reg)
+
+#Mas del 70% de datos entrenamiento
+reg1 <- lm(t_sTestFinal ~ o_e + pr + comp + ep_link + i_ty + asig + spr + fr_D + fr_R, entrenamiento)
+reg1 = stepAIC(reg1)
+summary(reg1)
